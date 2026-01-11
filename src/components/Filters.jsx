@@ -1,8 +1,8 @@
 import React from 'react';
-import { Search, Filter as FilterIcon, Info, CheckCircle2, RefreshCcw, FastForward, Trash2 } from 'lucide-react';
+import { Search, Filter as FilterIcon, Info, CheckCircle2, RefreshCcw, FastForward, Trash2, Shield } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const Filters = ({ searchTerm, setSearchTerm, filterAction, setFilterAction }) => {
+const Filters = ({ searchTerm, setSearchTerm, filterAction, setFilterAction, showNegativeOnly, setShowNegativeOnly }) => {
     const [showLegend, setShowLegend] = React.useState(false);
     const actions = ['All', 'Created', 'Updated', 'Skipped', 'Deleted'];
 
@@ -36,14 +36,24 @@ const Filters = ({ searchTerm, setSearchTerm, filterAction, setFilterAction }) =
                                 key={action}
                                 onClick={() => setFilterAction(action)}
                                 className={`px-3 py-1 rounded-md text-[11px] font-bold uppercase tracking-wider transition-all ${filterAction === action
-                                        ? 'bg-primary text-white shadow-lg shadow-primary/20'
-                                        : 'text-slate-500 hover:text-slate-300'
+                                    ? 'bg-primary text-white shadow-lg shadow-primary/20'
+                                    : 'text-slate-500 hover:text-slate-300'
                                     }`}
                             >
                                 {action}
                             </button>
                         ))}
                     </div>
+
+                    <button
+                        onClick={() => setShowNegativeOnly(!showNegativeOnly)}
+                        className={`flex items-center gap-2 px-3 py-2 rounded-lg border text-[11px] font-bold uppercase transition-all ${showNegativeOnly ? 'bg-red-500/10 border-red-500/50 text-red-400' : 'bg-slate-900/50 border-border text-slate-500 hover:text-slate-300'}`}
+                        title="Show only files with negative tests"
+                    >
+                        <Shield className="w-4 h-4" />
+                        <span className="hidden sm:inline">Negative Only</span>
+                    </button>
+
                     <button
                         onClick={() => setShowLegend(!showLegend)}
                         className={`p-2 rounded-lg border transition-all ${showLegend ? 'bg-primary/10 border-primary text-primary' : 'bg-slate-900/50 border-border text-slate-500 hover:text-slate-300'}`}

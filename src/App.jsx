@@ -72,11 +72,13 @@ function App() {
   const [repoPath, setRepoPath] = useState('/Users/user/projects/my-api-tests');
   const [serverUrl, setServerUrl] = useState('');
   const [tokens, setTokens] = useState({});
+  const [generateNegative, setGenerateNegative] = useState(true);
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState(null);
   const [files, setFiles] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterAction, setFilterAction] = useState('All');
+  const [showNegativeOnly, setShowNegativeOnly] = useState(false);
 
   const handleSpecUpdate = (content, validationError) => {
     setSpecContent(content);
@@ -104,6 +106,7 @@ function App() {
           repo_path: repoPath,
           server_url: serverUrl || null,
           tokens: Object.keys(tokens).length > 0 ? tokens : null,
+          generate_negative_tests: generateNegative,
         }),
       });
 
@@ -125,7 +128,8 @@ function App() {
     const matchesSearch = file.fileName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       file.endpointId.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesFilter = filterAction === 'All' || file.action === filterAction;
-    return matchesSearch && matchesFilter;
+    const matchesNegative = !showNegativeOnly || file.code.includes('@pytest.mark.negative');
+    return matchesSearch && matchesFilter && matchesNegative;
   });
 
   return (
@@ -179,6 +183,8 @@ function App() {
                   setServerUrl={setServerUrl}
                   tokens={tokens}
                   setTokens={setTokens}
+                  generateNegative={generateNegative}
+                  setGenerateNegative={setGenerateNegative}
                 />
 
                 <button
@@ -250,6 +256,8 @@ function App() {
                   setSearchTerm={setSearchTerm}
                   filterAction={filterAction}
                   setFilterAction={setFilterAction}
+                  showNegativeOnly={showNegativeOnly}
+                  setShowNegativeOnly={setShowNegativeOnly}
                 />
 
                 <div className="space-y-4 max-h-[600px] overflow-y-auto pr-2 custom-scrollbar">
@@ -261,7 +269,7 @@ function App() {
                     <div className="py-20 text-center text-slate-500">
                       <p>No results match your current filters.</p>
                       <button
-                        onClick={() => { setSearchTerm(''); setFilterAction('All'); }}
+                        onClick={() => { setSearchTerm(''); setFilterAction('All'); setShowNegativeOnly(false); }}
                         className="text-primary text-sm font-medium mt-2 hover:underline"
                       >
                         Clear Filters

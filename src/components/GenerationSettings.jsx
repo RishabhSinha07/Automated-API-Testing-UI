@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Globe, Shield, Plus, X, Key } from 'lucide-react';
 
-const GenerationSettings = ({ serverUrl, setServerUrl, tokens, setTokens }) => {
+const GenerationSettings = ({ serverUrl, setServerUrl, tokens, setTokens, generateNegative, setGenerateNegative }) => {
     const [newScheme, setNewScheme] = useState('');
     const [newToken, setNewToken] = useState('');
 
@@ -33,6 +33,29 @@ const GenerationSettings = ({ serverUrl, setServerUrl, tokens, setTokens }) => {
             </p>
 
             <div className="space-y-6">
+                {/* Generation Options */}
+                <div className="flex items-center justify-between p-3 rounded-xl bg-slate-900/50 border border-border">
+                    <div className="flex items-center gap-3">
+                        <div className="p-2 bg-primary/10 rounded-lg">
+                            <Shield className="w-4 h-4 text-primary" />
+                        </div>
+                        <div>
+                            <h4 className="text-sm font-semibold text-slate-200">Negative Test Generation</h4>
+                            <p className="text-[10px] text-slate-500">Auto-create tests for schema violations</p>
+                        </div>
+                    </div>
+                    <button
+                        onClick={() => setGenerateNegative(!generateNegative)}
+                        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${generateNegative ? 'bg-primary' : 'bg-slate-700'
+                            }`}
+                    >
+                        <span
+                            className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${generateNegative ? 'translate-x-6' : 'translate-x-1'
+                                }`}
+                        />
+                    </button>
+                </div>
+
                 {/* Server URL */}
                 <div>
                     <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 px-1">

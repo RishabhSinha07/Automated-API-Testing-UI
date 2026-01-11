@@ -1,16 +1,56 @@
-# React + Vite
+# API TestGen UI
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A premium React-based dashboard for the Automated API Test Generator. Effortlessly transform OpenAPI specifications into high-quality, deterministic test suites with a focus on visual clarity and user control.
 
-Currently, two official plugins are available:
+![UI Mockup](https://raw.githubusercontent.com/RishabhSinha07/Automated-API-Testing-UI/main/public/mockup_placeholder.png)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features
 
-## React Compiler
+- **Live Spec Validation**: Drag and drop your OpenAPI files and get instant feedback on schema correctness.
+- **Smart Repo Integration**: Connect to your local test repository using a native macOS file picker.
+- **Interactive Diff Explorer**: Review which tests will be Created, Updated, or Skipped before application.
+- **Automatic Negative Testing**: Toggleable generation of industrial-grade negative test cases for schema violations.
+- **Advanced Result Filtering**: Quickly find tests by method, path, or mutation status (Positive vs Negative).
+- **In-Browser Code Preview**: Instant syntax-highlighted preview of generated Python test files.
 
-The React Compiler is currently not compatible with SWC. See [this issue](https://github.com/vitejs/vite-plugin-react/issues/428) for tracking the progress.
+## Getting Started
 
-## Expanding the ESLint configuration
+### 1. Prerequisites
+Ensure you have the [Backend Service](https://github.com/RishabhSinha07/Automated-API-Testing) running.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+```bash
+# In the backend repo
+export PYTHONPATH=$PYTHONPATH:$(pwd)/src
+python3 -m api_test_gen.server
+```
+
+### 2. Setup the UI
+```bash
+# Clone the UI repository
+git clone <ui-repo-url>
+cd Automated-API-Testing-UI
+
+# Install dependencies
+npm install
+
+# Start the dev server
+npm run dev
+```
+
+The UI will be available at `http://localhost:5173`.
+
+## Configuration
+
+- **API Base URL**: Override the production server URL for your test environment.
+- **Security Tokens**: Securely inject Bearer tokens or API Keys into generated test clients.
+- **Negative Tests Toggle**: Enable/Disable mutation-based testing for all validation schemas.
+
+## Tech Stack
+- **Frontend**: React, Vite
+- **Styling**: Tailwind CSS
+- **Icons**: Lucide React
+- **Animations**: Framer Motion
+- **Design**: Glassmorphism & High-Contrast Dark Mode
+
+---
+Developed with ❤️ by the API TestGen Team

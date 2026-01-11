@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ChevronDown, ChevronRight, FileCode, Clock, Tag, Copy, CheckCircle2 } from 'lucide-react';
+import { ChevronDown, ChevronRight, FileCode, Clock, Tag, Copy, CheckCircle2, Shield } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const ActionBadge = ({ action }) => {
@@ -42,6 +42,12 @@ const TestFileCard = ({ file }) => {
                     <div className="flex items-center gap-2 mb-1">
                         <h3 className="font-medium text-slate-100 truncate">{file.fileName}</h3>
                         <ActionBadge action={file.action} />
+                        {file.code.includes('@pytest.mark.negative') && (
+                            <span className="px-2 py-0.5 rounded-full text-[9px] font-bold uppercase bg-red-500/20 text-red-400 border border-red-500/30 flex items-center gap-1">
+                                <Shield className="w-2 h-2" />
+                                Negative
+                            </span>
+                        )}
                     </div>
                     <div className="flex items-center gap-4 text-xs text-slate-500">
                         <div className="flex items-center gap-1">
