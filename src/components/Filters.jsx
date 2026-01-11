@@ -2,20 +2,22 @@ import React from 'react';
 import { Search, Filter as FilterIcon, Info, CheckCircle2, RefreshCcw, FastForward, Trash2, Shield } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const Filters = ({ searchTerm, setSearchTerm, filterAction, setFilterAction, showNegativeOnly, setShowNegativeOnly }) => {
+const Filters = ({ searchTerm, setSearchTerm, filterAction, setFilterAction, testTypeFilter, setTestTypeFilter }) => {
     const [showLegend, setShowLegend] = React.useState(false);
     const actions = ['All', 'Created', 'Updated', 'Skipped', 'Deleted'];
+    const testTypes = ['All', 'Positive', 'Negative', 'Security'];
 
     const legend = [
         { label: 'Created', icon: CheckCircle2, color: 'text-green-400', desc: 'New endpoint found. Generated a fresh test file.' },
         { label: 'Updated', icon: RefreshCcw, color: 'text-blue-400', desc: 'Schema change detected. Updated payloads and assertions.' },
         { label: 'Skipped', icon: FastForward, color: 'text-slate-400', desc: 'No changes in spec. Existing file is up to date.' },
         { label: 'Deleted', icon: Trash2, color: 'text-red-400', desc: 'Endpoint removed from spec. File marked as obsolete.' },
+        { label: 'Security', icon: Shield, color: 'text-blue-500', desc: 'Auth-related negative tests (missing/invalid tokens).' },
     ];
 
     return (
-        <div className="mb-6">
-            <div className="flex flex-col md:flex-row gap-4 mb-4">
+        <div className="mb-6 space-y-4">
+            <div className="flex flex-col md:flex-row gap-4">
                 <div className="relative flex-1">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <Search className="h-4 w-4 text-slate-500" />
@@ -30,12 +32,24 @@ const Filters = ({ searchTerm, setSearchTerm, filterAction, setFilterAction, sho
                 </div>
 
                 <div className="flex items-center gap-2">
+                    <button
+                        onClick={() => setShowLegend(!showLegend)}
+                        className={`p-2 rounded-lg border transition-all ${showLegend ? 'bg-primary/10 border-primary text-primary' : 'bg-slate-900/50 border-border text-slate-500 hover:text-slate-300'}`}
+                    >
+                        <Info className="w-4 h-4" />
+                    </button>
+                </div>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-4">
+                <div>
+                    <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1.5 ml-1">Action Status</label>
                     <div className="flex bg-slate-900/50 border border-border rounded-lg p-1">
                         {actions.map((action) => (
                             <button
                                 key={action}
                                 onClick={() => setFilterAction(action)}
-                                className={`px-3 py-1 rounded-md text-[11px] font-bold uppercase tracking-wider transition-all ${filterAction === action
+                                className={`px-3 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider transition-all ${filterAction === action
                                     ? 'bg-primary text-white shadow-lg shadow-primary/20'
                                     : 'text-slate-500 hover:text-slate-300'
                                     }`}
@@ -44,22 +58,24 @@ const Filters = ({ searchTerm, setSearchTerm, filterAction, setFilterAction, sho
                             </button>
                         ))}
                     </div>
+                </div>
 
-                    <button
-                        onClick={() => setShowNegativeOnly(!showNegativeOnly)}
-                        className={`flex items-center gap-2 px-3 py-2 rounded-lg border text-[11px] font-bold uppercase transition-all ${showNegativeOnly ? 'bg-red-500/10 border-red-500/50 text-red-400' : 'bg-slate-900/50 border-border text-slate-500 hover:text-slate-300'}`}
-                        title="Show only files with negative tests"
-                    >
-                        <Shield className="w-4 h-4" />
-                        <span className="hidden sm:inline">Negative Only</span>
-                    </button>
-
-                    <button
-                        onClick={() => setShowLegend(!showLegend)}
-                        className={`p-2 rounded-lg border transition-all ${showLegend ? 'bg-primary/10 border-primary text-primary' : 'bg-slate-900/50 border-border text-slate-500 hover:text-slate-300'}`}
-                    >
-                        <Info className="w-4 h-4" />
-                    </button>
+                <div>
+                    <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1.5 ml-1">Test Category</label>
+                    <div className="flex bg-slate-900/50 border border-border rounded-lg p-1">
+                        {testTypes.map((type) => (
+                            <button
+                                key={type}
+                                onClick={() => setTestTypeFilter(type)}
+                                className={`px-3 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider transition-all ${testTypeFilter === type
+                                    ? 'bg-primary text-white shadow-lg shadow-primary/20'
+                                    : 'text-slate-500 hover:text-slate-300'
+                                    }`}
+                            >
+                                {type}
+                            </button>
+                        ))}
+                    </div>
                 </div>
             </div>
 

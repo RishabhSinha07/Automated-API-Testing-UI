@@ -17,6 +17,27 @@ const ActionBadge = ({ action }) => {
     );
 };
 
+const TypeBadge = ({ type }) => {
+    const styles = {
+        positive: 'bg-green-500/10 text-green-400 border-green-500/20',
+        negative: 'bg-red-500/10 text-red-400 border-red-500/20',
+        security: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
+    };
+
+    const icons = {
+        positive: null,
+        negative: <Shield className="w-2 h-2" />,
+        security: <Shield className="w-2 h-2" />,
+    };
+
+    return (
+        <span className={`px-2 py-0.5 rounded-full text-[9px] font-bold uppercase border flex items-center gap-1 ${styles[type] || styles.positive}`}>
+            {icons[type]}
+            {type}
+        </span>
+    );
+};
+
 const TestFileCard = ({ file }) => {
     const [isExpanded, setIsExpanded] = useState(false);
     const [copied, setCopied] = useState(false);
@@ -42,12 +63,7 @@ const TestFileCard = ({ file }) => {
                     <div className="flex items-center gap-2 mb-1">
                         <h3 className="font-medium text-slate-100 truncate">{file.fileName}</h3>
                         <ActionBadge action={file.action} />
-                        {file.code.includes('@pytest.mark.negative') && (
-                            <span className="px-2 py-0.5 rounded-full text-[9px] font-bold uppercase bg-red-500/20 text-red-400 border border-red-500/30 flex items-center gap-1">
-                                <Shield className="w-2 h-2" />
-                                Negative
-                            </span>
-                        )}
+                        <TypeBadge type={file.testType} />
                     </div>
                     <div className="flex items-center gap-4 text-xs text-slate-500">
                         <div className="flex items-center gap-1">

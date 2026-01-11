@@ -73,12 +73,14 @@ function App() {
   const [serverUrl, setServerUrl] = useState('');
   const [tokens, setTokens] = useState({});
   const [generateNegative, setGenerateNegative] = useState(true);
+  const [dryRun, setDryRun] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState(null);
   const [files, setFiles] = useState([]);
+  const [report, setReport] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterAction, setFilterAction] = useState('All');
-  const [showNegativeOnly, setShowNegativeOnly] = useState(false);
+  const [testTypeFilter, setTestTypeFilter] = useState('All');
 
   const handleSpecUpdate = (content, validationError) => {
     setSpecContent(content);
@@ -107,6 +109,7 @@ function App() {
           server_url: serverUrl || null,
           tokens: Object.keys(tokens).length > 0 ? tokens : null,
           generate_negative_tests: generateNegative,
+          dry_run: dryRun,
         }),
       });
 
@@ -116,7 +119,8 @@ function App() {
       }
 
       const data = await response.json();
-      setFiles(data);
+      setFiles(data.files || []);
+      setReport(data.report || null);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -128,8 +132,8 @@ function App() {
     const matchesSearch = file.fileName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       file.endpointId.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesFilter = filterAction === 'All' || file.action === filterAction;
-    const matchesNegative = !showNegativeOnly || file.code.includes('@pytest.mark.negative');
-    return matchesSearch && matchesFilter && matchesNegative;
+    const matchesType = testTypeFilter === 'All' || file.testType.toLowerCase() === testTypeFilter.toLowerCase();
+    return matchesSearch && matchesFilter && matchesType;
   });
 
   return (
@@ -185,6 +189,8 @@ function App() {
                   setTokens={setTokens}
                   generateNegative={generateNegative}
                   setGenerateNegative={setGenerateNegative}
+                  dryRun={dryRun}
+                  setDryRun={setDryRun}
                 />
 
                 <button
@@ -203,12 +209,47 @@ function App() {
                   ) : (
                     <>
                       <Play className="w-5 h-5 fill-current" />
-                      Generate Tests
+                      {dryRun ? 'Simulate Generation' : 'Generate Tests'}
                     </>
                   )}
                 </button>
               </div>
             </section>
+
+            {report && (
+              <div className="p-6 rounded-xl bg-slate-900/80 border border-primary/20 shadow-xl shadow-primary/5 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <div className="flex items-center gap-2 mb-4">
+                  <div className="p-1.5 bg-primary/20 rounded-lg">
+                    <History className="w-4 h-4 text-primary" />
+                  </div>
+                  <h4 className="text-sm font-bold text-slate-200 uppercase tracking-widest">Execution Summary</h4>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="bg-slate-800/50 p-3 rounded-lg border border-border">
+                    <p className="text-[10px] text-slate-500 font-bold uppercase mb-1">Endpoints</p>
+                    <p className="text-xl font-bold text-white">{report.total_endpoints}</p>
+                  </div>
+                  <div className="bg-slate-800/50 p-3 rounded-lg border border-border">
+                    <p className="text-[10px] text-slate-500 font-bold uppercase mb-1">Coverage</p>
+                    <p className="text-xl font-bold text-primary">{report.coverage_percentage?.toFixed(1)}%</p>
+                  </div>
+                </div>
+                <div className="mt-4 space-y-2">
+                  <div className="flex justify-between items-center text-xs">
+                    <span className="text-slate-400">Positive Tests</span>
+                    <span className="text-green-400 font-bold">{report.positive_tests_count}</span>
+                  </div>
+                  <div className="flex justify-between items-center text-xs">
+                    <span className="text-slate-400">Negative Tests</span>
+                    <span className="text-red-400 font-bold">{report.negative_tests_count}</span>
+                  </div>
+                  <div className="flex justify-between items-center text-xs">
+                    <span className="text-slate-400">Security Tests</span>
+                    <span className="text-blue-400 font-bold">{report.security_tests_count}</span>
+                  </div>
+                </div>
+              </div>
+            )}
 
             <div className="p-6 rounded-xl bg-slate-900/50 border border-slate-800 border-dashed">
               <div className="flex gap-4 items-start">
@@ -256,8 +297,8 @@ function App() {
                   setSearchTerm={setSearchTerm}
                   filterAction={filterAction}
                   setFilterAction={setFilterAction}
-                  showNegativeOnly={showNegativeOnly}
-                  setShowNegativeOnly={setShowNegativeOnly}
+                  testTypeFilter={testTypeFilter}
+                  setTestTypeFilter={setTestTypeFilter}
                 />
 
                 <div className="space-y-4 max-h-[600px] overflow-y-auto pr-2 custom-scrollbar">

@@ -1,7 +1,12 @@
 import React, { useState } from 'react';
-import { Globe, Shield, Plus, X, Key } from 'lucide-react';
+import { Globe, Shield, Plus, X, Key, Eye } from 'lucide-react';
 
-const GenerationSettings = ({ serverUrl, setServerUrl, tokens, setTokens, generateNegative, setGenerateNegative }) => {
+const GenerationSettings = ({
+    serverUrl, setServerUrl,
+    tokens, setTokens,
+    generateNegative, setGenerateNegative,
+    dryRun, setDryRun
+}) => {
     const [newScheme, setNewScheme] = useState('');
     const [newToken, setNewToken] = useState('');
 
@@ -25,22 +30,45 @@ const GenerationSettings = ({ serverUrl, setServerUrl, tokens, setTokens, genera
                 <div className="p-2 bg-primary/10 rounded-lg">
                     <Globe className="w-5 h-5 text-primary" />
                 </div>
-                <h2 className="text-xl font-semibold text-white">Environment Settings</h2>
+                <h2 className="text-xl font-semibold text-white">Generation Settings</h2>
             </div>
 
             <p className="text-sm text-slate-400 mb-6">
-                Configure the target server and security credentials for your tests.
+                Configure how your tests are generated and executed.
             </p>
 
-            <div className="space-y-6">
-                {/* Generation Options */}
+            <div className="space-y-4">
+                {/* Dry Run Option */}
+                <div className="flex items-center justify-between p-3 rounded-xl bg-slate-900/50 border border-border">
+                    <div className="flex items-center gap-3">
+                        <div className="p-2 bg-blue-500/10 rounded-lg">
+                            <Eye className="w-4 h-4 text-blue-400" />
+                        </div>
+                        <div>
+                            <h4 className="text-sm font-semibold text-slate-200">Dry Run Mode</h4>
+                            <p className="text-[10px] text-slate-500">Preview changes without writing files</p>
+                        </div>
+                    </div>
+                    <button
+                        onClick={() => setDryRun(!dryRun)}
+                        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${dryRun ? 'bg-blue-500' : 'bg-slate-700'
+                            }`}
+                    >
+                        <span
+                            className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${dryRun ? 'translate-x-6' : 'translate-x-1'
+                                }`}
+                        />
+                    </button>
+                </div>
+
+                {/* Negative Generation Option */}
                 <div className="flex items-center justify-between p-3 rounded-xl bg-slate-900/50 border border-border">
                     <div className="flex items-center gap-3">
                         <div className="p-2 bg-primary/10 rounded-lg">
                             <Shield className="w-4 h-4 text-primary" />
                         </div>
                         <div>
-                            <h4 className="text-sm font-semibold text-slate-200">Negative Test Generation</h4>
+                            <h4 className="text-sm font-semibold text-slate-200">Negative Testing</h4>
                             <p className="text-[10px] text-slate-500">Auto-create tests for schema violations</p>
                         </div>
                     </div>
