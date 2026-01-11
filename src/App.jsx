@@ -4,6 +4,7 @@ import SpecUploader from './components/SpecUploader';
 import RepoSelector from './components/RepoSelector';
 import Filters from './components/Filters';
 import TestFileCard from './components/TestFileCard';
+import GenerationSettings from './components/GenerationSettings';
 
 // Stubbed data for initial state
 const STUB_FILES = [
@@ -69,6 +70,8 @@ def test_delete_non_existent_pet():
 function App() {
   const [specContent, setSpecContent] = useState('');
   const [repoPath, setRepoPath] = useState('/Users/user/projects/my-api-tests');
+  const [serverUrl, setServerUrl] = useState('');
+  const [tokens, setTokens] = useState({});
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState(null);
   const [files, setFiles] = useState([]);
@@ -99,6 +102,8 @@ function App() {
         body: JSON.stringify({
           spec_content: specContent,
           repo_path: repoPath,
+          server_url: serverUrl || null,
+          tokens: Object.keys(tokens).length > 0 ? tokens : null,
         }),
       });
 
@@ -168,6 +173,12 @@ function App() {
                 <RepoSelector
                   repoPath={repoPath}
                   setRepoPath={setRepoPath}
+                />
+                <GenerationSettings
+                  serverUrl={serverUrl}
+                  setServerUrl={setServerUrl}
+                  tokens={tokens}
+                  setTokens={setTokens}
                 />
 
                 <button
